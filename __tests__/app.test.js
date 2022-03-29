@@ -3,7 +3,6 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const { signIn } = require('../lib/services/UserService');
-const User = require('../lib/models/User/User');
 
 const mockUser = {
   firstName: 'User',
@@ -38,7 +37,9 @@ describe('08-backend-top-secret routes', () => {
     const { email, password } = mockUser;
     const user = await signIn({ email, password });
 
-    const res = await User.post('/api/v1/users/sessions');
+    const res = await request(app)
+      .post('/api/v1/users/sessions')
+      .send({ email, password });
 
     expect(res.body).toEqual({ message: 'Signed in successfully', user });
   });
