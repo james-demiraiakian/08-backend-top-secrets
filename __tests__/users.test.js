@@ -11,7 +11,7 @@ const mockUser = {
   password: '12345678',
 };
 
-describe('08-backend-top-secret routes', () => {
+describe('08-backend-top-secret users routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
