@@ -2,6 +2,8 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
+const { signIn } = require('../lib/services/UserService');
+const User = require('../lib/models/User/User');
 
 const mockUser = {
   firstName: 'User',
@@ -29,5 +31,14 @@ describe('08-backend-top-secret routes', () => {
       lastName,
       email,
     });
+  });
+
+  it('logs in a user', async () => {
+    const { email, password } = mockUser;
+    const user = await signIn({ email, password });
+
+    const res = await User.send('/api/v1/users/login');
+
+    expect(res.body).toEqual({ message: 'Signed in successfully', user });
   });
 });
