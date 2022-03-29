@@ -37,7 +37,7 @@ describe('08-backend-top-secret routes', () => {
     const { email, password } = mockUser;
     const user = await signIn({ email, password });
 
-    const res = await User.send('/api/v1/users/login');
+    const res = await User.post('/api/v1/users/sessions');
 
     expect(res.body).toEqual({ message: 'Signed in successfully', user });
   });
