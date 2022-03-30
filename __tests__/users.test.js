@@ -21,7 +21,8 @@ describe('08-backend-top-secret users routes', () => {
   });
 
   it('creates a new user', async () => {
-    const res = await request(app).post('/api/v1/users').send(mockUser);
+    const agent = request.agent(app);
+    const res = await agent.post('/api/v1/users').send(mockUser);
     const { firstName, lastName, email } = mockUser;
 
     expect(res.body).toEqual({
@@ -33,11 +34,12 @@ describe('08-backend-top-secret users routes', () => {
   });
 
   it('logs in a user', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
+    const agent = request.agent(app);
+    await agent.post('/api/v1/users').send(mockUser);
     const { email, password } = mockUser;
     const user = await signIn({ email, password });
 
-    const res = await request(app)
+    const res = await agent
       .post('/api/v1/users/sessions')
       .send({ email, password });
 
@@ -45,11 +47,12 @@ describe('08-backend-top-secret users routes', () => {
   });
 
   it('returns 401 on an invalid email', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
+    const agent = request.agent(app);
+    await agent.post('/api/v1/users').send(mockUser);
     const { email, password } = mockUser;
     await signIn({ email, password });
 
-    const res = await request(app)
+    const res = await agent
       .post('/api/v1/users/sessions')
       .send({ email: 'qwerty@ewewe.com', password });
 
@@ -57,7 +60,8 @@ describe('08-backend-top-secret users routes', () => {
   });
 
   it('returns 401 on ', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
+    const agent = request.agent(app);
+    await agent.post('/api/v1/users').send(mockUser);
     const { email, password } = mockUser;
     await signIn({ email, password });
 
@@ -69,13 +73,13 @@ describe('08-backend-top-secret users routes', () => {
   });
 
   it('logs out via delete function', async () => {
-    await request(app).post('/api/v1/users').send(mockUser);
+    const agent = request.agent(app);
+    await agent.post('/api/v1/users').send(mockUser);
     const { email, password } = mockUser;
-    const user = await signIn({ email, password });
+    await agent.post('/api/v1/users/sessions').send({ email, password });
 
-    console.log(user.body);
-
-    const res = await request(app).delete('/api/v1/users/sessions');
+    const res = await agent.delete('/api/v1/users/sessions');
+    console.log('users.test.js ', res.body);
 
     expect(res.body).toEqual({
       success: true,
