@@ -79,7 +79,6 @@ describe('08-backend-top-secret users routes', () => {
     await agent.post('/api/v1/users/sessions').send({ email, password });
 
     const res = await agent.delete('/api/v1/users/sessions');
-    console.log('users.test.js ', res.body);
 
     expect(res.body).toEqual({
       success: true,
